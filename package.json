@@ -1,6 +1,7 @@
 {
   "name": "first_app",
   "version": "0.1.0",
+  "lodash": "^4.17.5",
   "private": true,
   "devDependencies": {
     "react-native-scripts": "1.14.0",
