@@ -29,13 +29,21 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.row} key="left"><Text>{this.state.currentYear}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.row} key="left"><Text>{"months"}</Text></TouchableOpacity>
+
       <View style={styles.subContainer}>
+      <View style={styles.row}>
+        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.monthCells} key="left"><Text>{"<<"}</Text></TouchableOpacity>
+        <TouchableOpacity style={styles.monthCells} key="label"><Text>{this.state.currentYear}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.rightClicked.bind(this)}style={styles.monthCells} key="right"><Text>{">>"}</Text></TouchableOpacity>
+      </View>
         {
           _.map(this.state.months, month => {
             return <View style={styles.row}>
               {
                 _.map(month, mon => {
-                  return <View style={styles.monthCells} key={month}><Text>{mon}</Text></View>
+                  return <View style={styles.monthCells} key={mon}><Text>{mon}</Text></View>
                 })
               }
             </View>
@@ -46,6 +54,16 @@ export default class App extends React.Component {
       </View>
     );
   }
+
+  leftClicked() {
+    var currentYear = this.state.currentYear
+    this.setState({ currentYear: (currentYear - 1) })
+  }
+
+  rightClicked() {
+    var currentYear = this.state.currentYear
+    this.setState({ currentYear: (currentYear + 1) })
+  }
 }
 
 const styles = StyleSheet.create({
@@ -54,8 +72,8 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     width: 400,
-    height: 400,
-    marginTop: "50%",
+    height: 550,
+    marginTop: 300,
     marginLeft: "10%",
     alignItems: 'center',
     borderColor: 'black',
