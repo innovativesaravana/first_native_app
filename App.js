@@ -10,40 +10,35 @@ import {
   TextInput  
 } from 'react-native';
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    var months = [["Jan", "Feb", "Mar"],
-      ["Apr", "May", "Jun"],
-      ["Jul","Aug", "Sep"],
-      ["Oct", "Nov", "Dec"]];
-    var currentYear = 2018;
-    var years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020];
-    this.state = {
-      months: months,
-      currentYear: currentYear,
-      years: years,
-    };
+const Calendar = (props) => {
+  if (props.mode == "months") {
+    var cells = props.months;
+    var headerText = props.currentYear
+  } else {
+    var currentYear = props.currentYear
+    var diff = (currentYear%10) + 1;
+    var startYear = currentYear - diff;
+    var lastYear = startYear + 12;
+    var cells = [...Array(13).keys()].map((i) => (startYear + i)  );
+    var cells = _.chunk(cells,3);
+    var headerText = `${startYear+1} - ${lastYear-1}`
   }
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.row} key="left"><Text>{this.state.currentYear}</Text></TouchableOpacity>
-        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.row} key="left"><Text>{"months"}</Text></TouchableOpacity>
-
-      <View style={styles.subContainer}>
-      <View style={styles.row}>
-        <TouchableOpacity onPress={this.leftClicked.bind(this)} style={styles.monthCells} key="left"><Text>{"<<"}</Text></TouchableOpacity>
-        <TouchableOpacity style={styles.monthCells} key="label"><Text>{this.state.currentYear}</Text></TouchableOpacity>
-        <TouchableOpacity onPress={this.rightClicked.bind(this)}style={styles.monthCells} key="right"><Text>{">>"}</Text></TouchableOpacity>
+  return(
+  
+  <View style={props.styles.subContainer}>
+  
+      <View style={props.styles.headerRow}>
+        <TouchableOpacity onPress={props.state.leftClicked.bind(props.state)} style={props.styles.headerCells} key="left"><Text>{"<<"}</Text></TouchableOpacity>
+        <TouchableOpacity style={props.styles.headerCells} key="label"><Text>{headerText}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={props.state.rightClicked.bind(props.state)}style={props.styles.headerCells} key="right"><Text>{">>"}</Text></TouchableOpacity>
       </View>
         {
-          _.map(this.state.months, month => {
+          _.map(cells, month => {
             return <View style={styles.row}>
               {
                 _.map(month, mon => {
-                  return <View style={styles.monthCells} key={mon}><Text>{mon}</Text></View>
+                  return <TouchableOpacity style={props.styles.monthCells} onPress={props.state.monthClicked.bind(props.state,mon)} key={mon}><Text>{mon}</Text></TouchableOpacity>
                 })
               }
             </View>
@@ -51,6 +46,37 @@ export default class App extends React.Component {
 
         }
       </View>
+)
+}
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    var months = [["Jan", "Feb", "Mar"],
+      ["Apr", "May", "Jun"],
+      ["Jul","Aug", "Sep"],
+      ["Oct", "Nov", "Dec"]];
+    var date = new Date();
+    var currentYear = date.getFullYear();
+    var monthIndex = date.getMonth();
+    var month = _.flatten(months)[monthIndex];
+
+    var years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020];
+    this.state = {
+      months: months,
+      currentYear: currentYear,
+      years: years,
+      mode: "months",
+      month: month,
+      visible: false,
+    };
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <TouchableOpacity onPress={this.yearMode.bind(this)} style={styles.yearButton} key="left"><Text>{this.state.currentYear}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={this.monthButtonClicked.bind(this)} style={styles.monthButton} key="left"><Text>{this.state.month}</Text></TouchableOpacity>
+        {(this.state.visible)&&<Calendar state={this} currentYear={this.state.currentYear} months={this.state.months} mode={this.state.mode} styles={styles} />}
       </View>
     );
   }
@@ -58,6 +84,20 @@ export default class App extends React.Component {
   leftClicked() {
     var currentYear = this.state.currentYear
     this.setState({ currentYear: (currentYear - 1) })
+  }
+
+  yearMode() {
+    this.setState({ mode: "years" })
+  }
+
+  monthClicked(month) {
+    this.setState({ month: month })
+  }
+
+  monthButtonClicked() {
+    var visible = this.state.visible
+
+    this.setState({ visible: !visible })
   }
 
   rightClicked() {
@@ -70,21 +110,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  yearButton: {
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    borderColor: 'black',
+    borderWidth: 2,
+    flexDirection: 'row',
+    alignSelf: 'stretch'
+  },
+  monthButton: {
+    width: 100,
+    height: 50,
+    alignItems: 'center',
+    borderColor: 'black',
+    borderWidth: 2,
+    flexDirection: 'row',
+    alignSelf: 'stretch'
+  },
   subContainer: {
-    width: 400,
-    height: 550,
-    marginTop: 300,
+    width: 300,
+    height: 330,
+    marginTop: 50,
     marginLeft: "10%",
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 5,
   },
   row: {
-    width: 400,
-    height: 100,
+    width: 200,
+    height: 50,
     alignItems: 'center',
     borderColor: 'black',
     borderWidth: 2,
+    flexDirection: 'row',
+    alignSelf: 'stretch'
+  },
+  headerRow: {
+    width: 200,
+    height: 25,
+    alignItems: 'center',
     flexDirection: 'row',
     alignSelf: 'stretch'
   },
@@ -94,7 +159,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'stretch',
     borderColor: 'black',
-    borderWidth: 2,
+    borderWidth: 1,
+  },
+  headerCells: {
+    width: "33%",
+    height: "100%",
+    alignItems: 'center',
+    alignSelf: 'stretch',
   },
 });
 
