@@ -19,9 +19,15 @@ const Calendar = (props) => {
     var diff = (currentYear%10) + 1;
     var startYear = currentYear - diff;
     var lastYear = startYear + 12;
-    var cells = [...Array(13).keys()].map((i) => (startYear + i)  );
+    // var cells = [...Array(13).keys()].map((i) => (startYear + i)  );
+    var cells = [];
+
+    for (var i = 0; i <= 11; i++) {
+      cells.push((startYear + i));
+    }
     var cells = _.chunk(cells,3);
-    var headerText = `${startYear+1} - ${lastYear-1}`
+    // var cells = [[2010,2011,2012],[2013,2014,2015],[2016,2017,2018],[2019,2020,2021]]
+    var headerText = `${startYear+1} - ${lastYear-2}`
   }
 
   return(
@@ -29,16 +35,16 @@ const Calendar = (props) => {
   <View style={props.styles.subContainer}>
   
       <View style={props.styles.headerRow}>
-        <TouchableOpacity onPress={props.state.leftClicked.bind(props.state)} style={props.styles.headerCells} key="left"><Text>{"<<"}</Text></TouchableOpacity>
-        <TouchableOpacity style={props.styles.headerCells} key="label"><Text>{headerText}</Text></TouchableOpacity>
-        <TouchableOpacity onPress={props.state.rightClicked.bind(props.state)}style={props.styles.headerCells} key="right"><Text>{">>"}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => props.leftClicked()} style={props.styles.headerCells} key="left"><Text>{"<<"}</Text></TouchableOpacity>
+        <TouchableOpacity style={props.styles.headerCells} onPress={() => props.yearMode()} key="label"><Text>{headerText}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => props.rightClicked()}style={props.styles.headerCells} key="right"><Text>{">>"}</Text></TouchableOpacity>
       </View>
         {
           _.map(cells, month => {
             return <View style={styles.row}>
               {
                 _.map(month, mon => {
-                  return <TouchableOpacity style={props.styles.monthCells} onPress={props.state.monthClicked.bind(props.state,mon)} key={mon}><Text>{mon}</Text></TouchableOpacity>
+                  return <TouchableOpacity style={props.styles.monthCells} onPress={() => props.monthClicked(mon)} key={mon}><Text>{mon}</Text></TouchableOpacity>
                 })
               }
             </View>
@@ -63,10 +69,12 @@ export default class App extends React.Component {
     var years = [2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020];
     this.state = {
       months: months,
+      yearsYear: currentYear,
       currentYear: currentYear,
       years: years,
       mode: "months",
       month: month,
+      monthView: true,
       visible: false,
     };
   }
@@ -74,35 +82,62 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.yearMode.bind(this)} style={styles.yearButton} key="left"><Text>{this.state.currentYear}</Text></TouchableOpacity>
-        <TouchableOpacity onPress={this.monthButtonClicked.bind(this)} style={styles.monthButton} key="left"><Text>{this.state.month}</Text></TouchableOpacity>
-        {(this.state.visible)&&<Calendar state={this} currentYear={this.state.currentYear} months={this.state.months} mode={this.state.mode} styles={styles} />}
+        <TouchableOpacity onPress={() => this.openYearMode()} style={styles.yearButton} key="left"><Text>{this.state.yearsYear}</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => this.monthButtonClicked()} style={styles.monthButton} key="left"><Text>{this.state.month} - {this.state.currentYear}</Text></TouchableOpacity>
+        {(this.state.visible)&&<Calendar state={this} currentYear={this.state.currentYear} months={this.state.months} mode={this.state.mode}
+         yearMode={this.yearMode} monthClicked={this.monthClicked} styles={styles} leftClicked={this.leftClicked} rightClicked={this.rightClicked} />}
       </View>
     );
   }
 
-  leftClicked() {
+  leftClicked = e => {
     var currentYear = this.state.currentYear
-    this.setState({ currentYear: (currentYear - 1) })
+    if(this.state.mode === "months"){
+      this.setState({ currentYear: (currentYear - 1) })
+    } else {
+      this.setState({ currentYear: (currentYear - 10) })
+    }
   }
 
-  yearMode() {
+  openYearMode = e => {
+    this.monthButtonClicked()
+    this.yearMode()
+    this.setState({ monthView: false })
+  }
+
+  yearMode = e => {
     this.setState({ mode: "years" })
   }
 
-  monthClicked(month) {
-    this.setState({ month: month })
+  monthClicked = cellValue =>  {
+    if(this.state.mode === "years") {
+      
+      if(this.state.monthView){
+        this.setState({ currentYear: cellValue })
+        this.setState({ mode: "months" })
+      } else {
+        this.setState({ yearsYear: cellValue })
+        this.monthButtonClicked()
+      }
+    } else {
+      this.setState({ month: cellValue })
+      this.monthButtonClicked()
+    }
   }
 
-  monthButtonClicked() {
+  monthButtonClicked = e => {
     var visible = this.state.visible
 
-    this.setState({ visible: !visible })
+    this.setState({ visible: !visible, monthView: true })
   }
 
-  rightClicked() {
+  rightClicked = e => {
     var currentYear = this.state.currentYear
-    this.setState({ currentYear: (currentYear + 1) })
+    if(this.state.mode === "months"){
+      this.setState({ currentYear: (currentYear + 1) })
+    } else {
+      this.setState({ currentYear: (currentYear + 10) })
+    }
   }
 }
 
@@ -147,7 +182,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch'
   },
   headerRow: {
-    width: 200,
+    width: 300,
     height: 25,
     alignItems: 'center',
     flexDirection: 'row',
@@ -265,3 +300,5 @@ const styles = StyleSheet.create({
 //           })
 //         }
 //       </View>
+
+// {(this.state.visible)&&<Calendar state={this} currentYear={this.state.currentYear} months={this.state.months} mode={this.state.mode} styles={styles} />}
