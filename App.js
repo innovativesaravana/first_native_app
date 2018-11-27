@@ -118,6 +118,7 @@ export default class App extends React.Component {
       } else {
         this.setState({ yearsYear: cellValue })
         this.monthButtonClicked()
+        this.setState({ mode: "months" })
       }
     } else {
       this.setState({ month: cellValue })
