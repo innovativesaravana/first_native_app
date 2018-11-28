@@ -48,14 +48,6 @@ export default class App extends React.Component {
     return { cells, headerLabel};
   }
 
-  onChange = () => {
-    const { cells, headerLabel } = this.parseData(this.state.mode, this.state.months, this.state.currentYear)
-    this.setState({
-      cells: cells,
-      headerLabel: headerLabel
-    })
-  }
-
   render() {
     return (
       <View style={styles.subContainer}>
