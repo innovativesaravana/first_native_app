@@ -14,7 +14,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     const mode = "months";
-    const yearOnly = false;
+    const yearOnly = true;
     const year = 2018;
     const months = [
       "Jan",
@@ -36,6 +36,7 @@ export default class App extends React.Component {
       cells: cells,
       months: months,
       headerLabel: headerLabel,
+      yearOnly: yearOnly,
       currentYear: year,
       currentMonth: "Jan",
       selectedYear: year,
@@ -88,7 +89,7 @@ export default class App extends React.Component {
           </TouchableOpacity>
         </View>
         <Text>
-          {this.state.currentMonth} - {this.state.currentYear}
+          {this.state.selectedMonth} - {this.state.selectedYear}
         </Text>
         <View style={styles.cellContainer}>
           {_.map(this.state.cells, cell => {
@@ -154,19 +155,30 @@ export default class App extends React.Component {
 
   cellClicked = cellValue => {
     if (this.state.mode === "years") {
-      const { cells, headerLabel } = this.parseData(
-        "months",
-        this.state.months,
-        cellValue
-      );
-      this.setState({
-        cells: cells,
-        headerLabel: headerLabel,
-        mode: "months",
-        currentYear: cellValue
-      });
+      if (this.state.yearOnly) {
+        this.setState({
+          currentYear: cellValue,
+          selectedYear: cellValue
+        });
+      } else {
+        const { cells, headerLabel } = this.parseData(
+          "months",
+          this.state.months,
+          cellValue
+        );
+        this.setState({
+          cells: cells,
+          headerLabel: headerLabel,
+          mode: "months",
+          currentYear: cellValue
+        });
+      }
     } else {
-      this.setState({ currentMonth: cellValue });
+      this.setState({
+        currentMonth: cellValue,
+        selectedMonth: cellValue,
+        selectedYear: this.state.currentYear
+      });
     }
   };
 
