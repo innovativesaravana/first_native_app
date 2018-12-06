@@ -10,12 +10,10 @@ import {
   TextInput
 } from "react-native";
 
-export default class App extends React.Component {
+class Calendar extends React.Component {
   constructor(props) {
     super(props);
-    const mode = "months";
-    const yearOnly = true;
-    const year = 2018;
+    const { mode, yearOnly, startMonth, startYear} = props
     const months = [
       "Jan",
       "Feb",
@@ -30,17 +28,17 @@ export default class App extends React.Component {
       "Nov",
       "Dec"
     ];
-    const { cells, headerLabel } = this.parseData(mode, months, year);
+    const { cells, headerLabel } = this.parseData(mode, months, startYear);
     this.state = {
       mode: mode,
       cells: cells,
       months: months,
       headerLabel: headerLabel,
       yearOnly: yearOnly,
-      currentYear: year,
-      currentMonth: "Jan",
-      selectedYear: year,
-      selectedMonth: "Jan"
+      currentYear: startYear,
+      currentMonth: startMonth,
+      selectedYear: startYear,
+      selectedMonth: startMonth
     };
   }
 
@@ -213,6 +211,18 @@ export default class App extends React.Component {
       });
     }
   };
+}
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
+    );
+  }
 }
 
 const styles = StyleSheet.create({
