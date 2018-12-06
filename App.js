@@ -7,13 +7,14 @@ import {
   ScrollView,
   AppRegistry,
   TouchableOpacity,
+  Modal,
   TextInput
 } from "react-native";
 
 class Calendar extends React.Component {
   constructor(props) {
     super(props);
-    const { mode, yearOnly, startMonth, startYear} = props
+    const { mode, yearOnly, startMonth, startYear, closeModel } = props;
     const months = [
       "Jan",
       "Feb",
@@ -62,7 +63,7 @@ class Calendar extends React.Component {
 
   render() {
     return (
-      <View style={styles.subContainer}>
+      <Modal style={styles.subContainer}>
         <View style={styles.headerRow}>
           <TouchableOpacity
             onPress={() => this.leftClicked()}
@@ -102,7 +103,14 @@ class Calendar extends React.Component {
             );
           })}
         </View>
-      </View>
+        <TouchableOpacity
+          style={styles.headerCells}
+          onPress={() => this.props.closeModel()}
+          key="label"
+        >
+          <Text>Close</Text>
+        </TouchableOpacity>
+      </Modal>
     );
   }
 
@@ -216,13 +224,44 @@ class Calendar extends React.Component {
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isVisible: false
+    };
   }
-
+  // <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
   render() {
     return (
-      <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
+      <View>
+        {this.state.isVisible && (
+          <Calendar
+            mode="months"
+            yearOnly={false}
+            startMonth="Jan"
+            startYear={1996}
+            closeModel={this.closeModel}
+          />
+        )}
+        <TouchableOpacity
+          style={styles.viewButton}
+          key="label"
+          onPress={() => this.viewBottonClicked()}
+        >
+          <Text>Show Calendar</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
+  viewBottonClicked = e => {
+    this.setState({
+      isVisible: !this.state.isVisible
+    });
+  };
+
+  closeModel = e => {
+    this.setState({
+      isVisible: false
+    });
+  };
 }
 
 const styles = StyleSheet.create({
@@ -294,6 +333,13 @@ const styles = StyleSheet.create({
   headerCells: {
     width: "33%",
     height: "100%",
+    alignItems: "center",
+    alignSelf: "stretch"
+  },
+  viewButton: {
+    width: "33%",
+    height: "100%",
+    marginTop: 50,
     alignItems: "center",
     alignSelf: "stretch"
   }
