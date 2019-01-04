@@ -63,7 +63,14 @@ class Calendar extends React.Component {
 
   render() {
     return (
-      <Modal style={styles.modalContainer} transparent={true}>
+      <Modal
+        style={styles.modalContainer}
+        transparent={true}
+        visible={true}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+        }}
+      >
         <View style={styles.mainContainer}>
           <View style={styles.headerRow}>
             <TouchableOpacity
@@ -93,28 +100,59 @@ class Calendar extends React.Component {
         </Text> */}
           <View style={styles.cellContainer}>
             {_.map(this.state.cells, cell => {
+              const selectedYear = this.state.selectedYear;
+              const selectedMonth = this.state.selectedMonth;
+              // const compareValue = (this.state.mode == "years") ? this.state.selectedYear : this.state.selectedMonth
+              let isActive = false;
+              if (this.state.mode == "years") {
+                isActive = this.state.selectedYear == cell;
+              } else {
+                isActive =
+                  this.state.selectedYear == this.state.currentYear &&
+                  this.state.selectedMonth == cell;
+              }
+              const bColor = isActive ? "#0081ED" : "white";
+              const fColor = isActive ? "white" : "black";
+
               return (
                 <TouchableOpacity
-                  style={styles.monthCells}
+                  style={[styles.monthCells, { backgroundColor: bColor }]}
                   onPress={() => this.cellClicked(cell)}
                   key={cell}
                 >
-                  <Text style={styles.cellText}>{cell}</Text>
+                  <Text style={[styles.cellText, { color: fColor }]}>
+                    {cell}
+                  </Text>
                 </TouchableOpacity>
               );
             })}
           </View>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => this.props.closeModel()}
-            key="label"
-          >
-            <Text style={styles.textCell}>Close</Text>
-          </TouchableOpacity>
+          <View style={styles.footerRow}>
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() =>
+                this.props.closeModel(
+                  this.state.selectedMonth,
+                  this.state.selectedYear
+                )
+              }
+              key="label"
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
     );
   }
+
+  getColor = cellValue => {
+    if (this.state.mode == "years") {
+      return this.state.currentYear == cellValue ? "blue" : "black";
+    } else {
+      return this.state.currentMonth == cellValue ? "blue" : "black";
+    }
+  };
 
   leftClicked = e => {
     var currentYear = this.state.currentYear;
@@ -164,10 +202,17 @@ class Calendar extends React.Component {
   cellClicked = cellValue => {
     if (this.state.mode === "years") {
       if (this.state.yearOnly) {
-        this.setState({
-          currentYear: cellValue,
-          selectedYear: cellValue
-        });
+        this.setState(
+          {
+            currentYear: cellValue,
+            selectedYear: cellValue
+          },
+          () =>
+            this.props.closeModel(
+              this.state.selectedMonth,
+              this.state.selectedYear
+            )
+        );
       } else {
         const { cells, headerLabel } = this.parseData(
           "months",
@@ -182,11 +227,18 @@ class Calendar extends React.Component {
         });
       }
     } else {
-      this.setState({
-        currentMonth: cellValue,
-        selectedMonth: cellValue,
-        selectedYear: this.state.currentYear
-      });
+      this.setState(
+        {
+          currentMonth: cellValue,
+          selectedMonth: cellValue,
+          selectedYear: this.state.currentYear
+        },
+        () =>
+          this.props.closeModel(
+            this.state.selectedMonth,
+            this.state.selectedYear
+          )
+      );
     }
   };
 
@@ -223,11 +275,34 @@ class Calendar extends React.Component {
   };
 }
 
-export default class App extends React.Component {
+class Button extends React.Component {
   constructor(props) {
     super(props);
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    const d = new Date();
+    const currentMonth = months[d.getMonth()];
+    const currentYear = d.getFullYear();
+    const mode = props.mode;
+    const yearOnly = props.yearOnly;
     this.state = {
-      isVisible: false
+      isVisible: false,
+      currentMonth: currentMonth,
+      currentYear: currentYear,
+      mode: mode,
+      yearOnly: yearOnly
     };
   }
   // <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
@@ -236,10 +311,10 @@ export default class App extends React.Component {
       <View>
         {this.state.isVisible && (
           <Calendar
-            mode="months"
-            yearOnly={false}
-            startMonth="Jan"
-            startYear={1996}
+            mode={this.state.mode}
+            yearOnly={this.state.yearOnly}
+            startMonth={this.state.currentMonth}
+            startYear={this.state.currentYear}
             closeModel={this.closeModel}
           />
         )}
@@ -248,8 +323,19 @@ export default class App extends React.Component {
           key="label"
           onPress={() => this.viewBottonClicked()}
         >
-          <Text>Show Calendar</Text>
+          <Text>
+            {this.state.yearOnly
+              ? this.state.currentYear
+              : `${this.state.currentMonth} - ${this.state.currentYear}`}
+          </Text>
         </TouchableOpacity>
+        {/* <TouchableOpacity
+          style={styles.viewButton}
+          key="yearlabel"
+          onPress={() => this.yearButtonClicked()}
+        >
+          <Text>{this.state.currentYear}</Text>
+        </TouchableOpacity> */}
       </View>
     );
   }
@@ -259,11 +345,36 @@ export default class App extends React.Component {
     });
   };
 
-  closeModel = e => {
+  // yearButtonClicked = e => {
+  //   this.setState({
+  //     isVisible: !this.state.isVisible,
+  //     yearOnly: true,
+  //     mode: "years"
+  //   });
+  // };
+
+  closeModel = (month, year) => {
     this.setState({
-      isVisible: false
+      isVisible: false,
+      currentMonth: month,
+      currentYear: year
     });
   };
+}
+
+export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  // <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
+  render() {
+    return (
+      <View style={styles.appContainer}>
+        <Button mode={"months"} yearOnly={false} />
+        <Button mode={"years"} yearOnly={true} />
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -298,6 +409,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 5
   },
+  appContainer: {
+    width: "100%",
+    height: "100%",
+    borderColor: "black",
+    borderWidth: 2
+  },
   modalContainer: {
     borderWidth: 5
   },
@@ -331,8 +448,18 @@ const styles = StyleSheet.create({
   },
   headerRow: {
     width: "100%",
-    height: "10%",
+    height: "20%",
     marginTop: "5%",
+    marginBottom: "2%",
+    alignItems: "center",
+    flexDirection: "row",
+    alignSelf: "stretch"
+  },
+  footerRow: {
+    width: "100%",
+    height: "20%",
+    marginTop: "2%",
+    marginBottom: "2%",
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "stretch"
@@ -346,9 +473,9 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   headerCells: {
+    marginTop: "0%",
     width: "33%",
     height: "100%",
-    textAlign: "center",
     alignItems: "center",
     alignSelf: "stretch"
   },
@@ -358,11 +485,16 @@ const styles = StyleSheet.create({
   cellText: {
     marginTop: "25%"
   },
+  closeButtonText: {
+    fontWeight: "bold"
+  },
   closeButton: {
-    marginBottom: "2%",
-    width: "15%",
-    height: "8%",
+    marginLeft: "5%",
+    width: "35%",
+    height: "100%",
     borderColor: "black",
+    alignItems: "center",
+    alignSelf: "stretch",
     borderWidth: 2
   },
   viewButton: {
@@ -370,6 +502,8 @@ const styles = StyleSheet.create({
     height: "20%",
     marginTop: "10%",
     alignItems: "center",
+    borderColor: "black",
+    borderWidth: 2,
     alignSelf: "stretch"
   }
 });
