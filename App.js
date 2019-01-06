@@ -1,5 +1,6 @@
 import React from "react";
 import _ from "lodash";
+import PropTypes from 'prop-types';
 import {
   StyleSheet,
   Text,
@@ -29,10 +30,10 @@ class Calendar extends React.Component {
 
     const month = months[date.getMonth()];
     const year = date.getFullYear();
-    const modee = yearOnly ? "years" : "months"
-    const { cells, headerLabel } = this.parseData(modee, months, year);
+    const mode = yearOnly ? "years" : "months"
+    const { cells, headerLabel } = this.parseData(mode, months, year);
     this.state = {
-      mode: modee,
+      mode: mode,
       cells: cells,
       months: months,
       headerLabel: headerLabel,
@@ -106,11 +107,11 @@ class Calendar extends React.Component {
               const selectedMonth = this.state.selectedMonth;
               let isActive = false;
               if (this.state.mode == "years") {
-                isActive = this.state.selectedYear == cell;
+                isActive = selectedYear == cell;
               } else {
                 isActive =
-                  this.state.selectedYear == this.state.currentYear &&
-                  this.state.selectedMonth == cell;
+                  selectedYear == this.state.currentYear &&
+                  selectedMonth == cell;
               }
               const bColor = isActive ? "#0081ED" : "white";
               const fColor = isActive ? "white" : "black";
@@ -259,6 +260,12 @@ class Calendar extends React.Component {
       });
     }
   };
+}
+
+Calendar.propTypes = {
+  date: PropTypes.instanceOf(Date),
+  yearOnly: PropTypes.bool,
+  closeModel: PropTypes.func.isRequired,
 }
 
 export default class App extends React.Component {
