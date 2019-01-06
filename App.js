@@ -4,11 +4,8 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  AppRegistry,
   TouchableOpacity,
   Modal,
-  TextInput
 } from "react-native";
 
 class Calendar extends React.Component {
@@ -103,14 +100,10 @@ class Calendar extends React.Component {
               <Text style={styles.textCell}>{">>"}</Text>
             </TouchableOpacity>
           </View>
-          {/* <Text>
-          {this.state.selectedMonth} - {this.state.selectedYear}
-        </Text> */}
           <View style={styles.cellContainer}>
             {_.map(this.state.cells, cell => {
               const selectedYear = this.state.selectedYear;
               const selectedMonth = this.state.selectedMonth;
-              // const compareValue = (this.state.mode == "years") ? this.state.selectedYear : this.state.selectedMonth
               let isActive = false;
               if (this.state.mode == "years") {
                 isActive = this.state.selectedYear == cell;
@@ -187,12 +180,6 @@ class Calendar extends React.Component {
     }
   };
 
-  openYearMode = e => {
-    // this.headerLabelClicked()
-    // this.yearMode()
-    // this.setState({ monthView: false })
-  };
-
   yearMode = e => {
     const { cells, headerLabel } = this.parseData(
       "years",
@@ -247,12 +234,6 @@ class Calendar extends React.Component {
     }
   };
 
-  // headerLabelClicked = e => {
-  //   // var visible = this.state.visible
-
-  //   // this.setState({ visible: !visible, monthView: true })
-  // }
-
   rightClicked = e => {
     var currentYear = this.state.currentYear;
     if (this.state.mode === "months") {
@@ -280,7 +261,7 @@ class Calendar extends React.Component {
   };
 }
 
-class Button extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     const months = [
@@ -297,37 +278,20 @@ class Button extends React.Component {
       "Nov",
       "Dec"
     ];
-    const d = new Date();
-    const currentMonth = months[d.getMonth()];
-    const currentYear = d.getFullYear();
-    const mode = props.mode;
-    const yearOnly = props.yearOnly;
+    const date = new Date();
     this.state = {
       isVisible: false,
-      months: months,
-      currentMonth: currentMonth,
-      currentYear: currentYear,
-      mode: mode,
-      date: d,
-      yearOnly: yearOnly
+      date: date,
+      months: months
     };
   }
-  // <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
   render() {
     return (
       <View>
         {this.state.isVisible && (
-          // <Calendar
-          //   mode={this.state.mode}
-          //   date = {this.state.date}
-          //   yearOnly={this.state.yearOnly}
-          //   startMonth={this.state.currentMonth}
-          //   startYear={this.state.currentYear}
-          //   closeModel={this.closeModel}
-          // />
           <Calendar
             date = {this.state.date}
-            yearOnly={this.state.yearOnly}
+            yearOnly={false}
             closeModel={this.closeModel}
           />
         )}
@@ -337,35 +301,17 @@ class Button extends React.Component {
           onPress={() => this.viewBottonClicked()}
         >
           <Text>
-            {this.state.yearOnly
-              ? this.state.date.getFullYear()
-              : `${this.state.months[this.state.date.getMonth()]} - ${this.state.date.getFullYear()}`}
+            {`${this.state.months[this.state.date.getMonth()]} ${this.state.date.getFullYear()}`}
           </Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          style={styles.viewButton}
-          key="yearlabel"
-          onPress={() => this.yearButtonClicked()}
-        >
-          <Text>{this.state.currentYear}</Text>
-        </TouchableOpacity> */}
       </View>
     );
   }
   viewBottonClicked = e => {
     this.setState({
-      isVisible: !this.state.isVisible
+      isVisible: true
     });
   };
-
-  // yearButtonClicked = e => {
-  //   this.setState({
-  //     isVisible: !this.state.isVisible,
-  //     yearOnly: true,
-  //     mode: "years"
-  //   });
-  // };
-
   closeModel = (date) => {
     this.setState({
       isVisible: false,
@@ -374,59 +320,11 @@ class Button extends React.Component {
   };
 }
 
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  // <Calendar mode="months" yearOnly={false} startMonth="Jan" startYear={1996} />
-  render() {
-    return (
-      <View style={styles.appContainer}>
-        <Button mode={"months"} yearOnly={false} />
-        <Button mode={"years"} yearOnly={true} />
-      </View>
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  yearButton: {
-    width: "30%",
-    height: "20%",
-    alignItems: "center",
-    borderColor: "black",
-    borderWidth: 2,
-    flexDirection: "row",
-    alignSelf: "stretch"
-  },
-  monthButton: {
-    width: "30%",
-    height: "25%",
-    alignItems: "center",
-    borderColor: "black",
-    borderWidth: 2,
-    flexDirection: "row",
-    alignSelf: "stretch"
-  },
-  subContainer: {
-    backgroundColor: "black",
-    width: "10%",
-    height: "10%",
-    marginTop: "10%",
-    marginLeft: "10%",
-    alignItems: "center",
-    borderColor: "black",
-    borderWidth: 5
-  },
-  appContainer: {
-    width: "100%",
-    height: "100%",
-    borderColor: "black",
-    borderWidth: 2
-  },
+  
   modalContainer: {
     borderWidth: 5
   },
@@ -448,15 +346,6 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     marginLeft: "1%",
     alignItems: "center"
-  },
-  row: {
-    width: "80%",
-    height: "5%",
-    alignItems: "center",
-    borderColor: "black",
-    borderWidth: 2,
-    flexDirection: "row",
-    alignSelf: "stretch"
   },
   headerRow: {
     width: "100%",
