@@ -337,48 +337,59 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     backgroundColor: "white",
-    width: "70%",
-    height: "60%",
+    width: "75%",
+    height: "66%",
     marginTop: "30%",
     marginLeft: "5%",
     alignItems: "center",
     borderColor: "black",
-    borderWidth: 5
+    borderRadius: 8,
+    borderWidth: 1
   },
   cellContainer: {
-    width: "100%",
+    width: "90%",
     height: "80%",
-    marginTop: "2%",
+    margin: "1%",
     flexDirection: "row",
     flexWrap: "wrap",
     marginLeft: "1%",
     alignItems: "center"
   },
   headerRow: {
-    width: "100%",
-    height: "20%",
-    marginTop: "5%",
-    marginBottom: "2%",
+    width: "90%",
+    height: "15%",
+    margin: "4%",
     alignItems: "center",
     flexDirection: "row",
-    alignSelf: "stretch"
+    alignSelf: "stretch",
+    borderColor: "black",
+    borderRadius: 5,
+    borderWidth: 1,
   },
   footerRow: {
     width: "100%",
-    height: "20%",
-    marginTop: "2%",
-    marginBottom: "2%",
+    height: "15%",
+    margin: "1%",
     alignItems: "center",
     flexDirection: "row",
-    alignSelf: "stretch"
+    alignSelf: "stretch",
   },
   monthCells: {
-    width: "33%",
-    height: "25%",
+    width: "31%",
+    height: "22%",
+    margin: "1%",
     alignItems: "center",
     alignSelf: "stretch",
     borderColor: "black",
-    borderWidth: 1
+    borderWidth: 1,
+    borderRadius: 2,
+    shadowColor: "#bec0c4",
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    shadowOffset: {
+      height: 5,
+      width: 5
+    }
   },
   headerCells: {
     marginTop: "0%",
@@ -391,19 +402,25 @@ const styles = StyleSheet.create({
     marginTop: "15%"
   },
   cellText: {
-    marginTop: "25%"
+    marginTop: "12%",
+    marginBottom: "12%",
+    alignItems: "center",
   },
   closeButtonText: {
+    marginLeft: "15%",
+    marginBottom: "5%",
+    marginTop: "5%",
     fontWeight: "bold"
   },
   closeButton: {
-    marginLeft: "5%",
+    margin: "2%",
     width: "35%",
-    height: "100%",
+    height: "85%",
+    borderRadius: 50,
     borderColor: "black",
     alignItems: "center",
     alignSelf: "stretch",
-    borderWidth: 2
+    borderWidth: 1
   },
   viewButton: {
     width: "33%",
