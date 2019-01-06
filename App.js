@@ -14,7 +14,7 @@ import {
 class Calendar extends React.Component {
   constructor(props) {
     super(props);
-    const { mode, yearOnly, startMonth, startYear, closeModel } = props;
+    const { yearOnly, closeModel,date } = props;
     const months = [
       "Jan",
       "Feb",
@@ -29,18 +29,26 @@ class Calendar extends React.Component {
       "Nov",
       "Dec"
     ];
-    const { cells, headerLabel } = this.parseData(mode, months, startYear);
+
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    const modee = yearOnly ? "years" : "months"
+    const { cells, headerLabel } = this.parseData(modee, months, year);
     this.state = {
-      mode: mode,
+      mode: modee,
       cells: cells,
       months: months,
       headerLabel: headerLabel,
       yearOnly: yearOnly,
-      currentYear: startYear,
-      currentMonth: startMonth,
-      selectedYear: startYear,
-      selectedMonth: startMonth
+      currentYear: year,
+      currentMonth: month,
+      selectedYear: year,
+      selectedMonth: month
     };
+  }
+
+  getDate = (year,month) => {
+    return new Date(year,_.indexOf(this.state.months, month),1)
   }
 
   parseData = (mode, months, year) => {
@@ -132,8 +140,7 @@ class Calendar extends React.Component {
               style={styles.closeButton}
               onPress={() =>
                 this.props.closeModel(
-                  this.state.selectedMonth,
-                  this.state.selectedYear
+                  this.getDate(this.state.selectedYear,this.state.selectedMonth)
                 )
               }
               key="label"
@@ -209,8 +216,7 @@ class Calendar extends React.Component {
           },
           () =>
             this.props.closeModel(
-              this.state.selectedMonth,
-              this.state.selectedYear
+              this.getDate(this.state.selectedYear,this.state.selectedMonth)
             )
         );
       } else {
@@ -235,8 +241,7 @@ class Calendar extends React.Component {
         },
         () =>
           this.props.closeModel(
-            this.state.selectedMonth,
-            this.state.selectedYear
+            this.getDate(this.state.selectedYear,this.state.selectedMonth)
           )
       );
     }
@@ -299,9 +304,11 @@ class Button extends React.Component {
     const yearOnly = props.yearOnly;
     this.state = {
       isVisible: false,
+      months: months,
       currentMonth: currentMonth,
       currentYear: currentYear,
       mode: mode,
+      date: d,
       yearOnly: yearOnly
     };
   }
@@ -310,11 +317,17 @@ class Button extends React.Component {
     return (
       <View>
         {this.state.isVisible && (
+          // <Calendar
+          //   mode={this.state.mode}
+          //   date = {this.state.date}
+          //   yearOnly={this.state.yearOnly}
+          //   startMonth={this.state.currentMonth}
+          //   startYear={this.state.currentYear}
+          //   closeModel={this.closeModel}
+          // />
           <Calendar
-            mode={this.state.mode}
+            date = {this.state.date}
             yearOnly={this.state.yearOnly}
-            startMonth={this.state.currentMonth}
-            startYear={this.state.currentYear}
             closeModel={this.closeModel}
           />
         )}
@@ -325,8 +338,8 @@ class Button extends React.Component {
         >
           <Text>
             {this.state.yearOnly
-              ? this.state.currentYear
-              : `${this.state.currentMonth} - ${this.state.currentYear}`}
+              ? this.state.date.getFullYear()
+              : `${this.state.months[this.state.date.getMonth()]} - ${this.state.date.getFullYear()}`}
           </Text>
         </TouchableOpacity>
         {/* <TouchableOpacity
@@ -353,11 +366,10 @@ class Button extends React.Component {
   //   });
   // };
 
-  closeModel = (month, year) => {
+  closeModel = (date) => {
     this.setState({
       isVisible: false,
-      currentMonth: month,
-      currentYear: year
+      date: date,
     });
   };
 }
