@@ -14,18 +14,18 @@ class Calendar extends React.Component {
     super(props);
     const { yearOnly, closeModel,date } = props;
     const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC"
     ];
 
     const month = months[date.getMonth()];
@@ -114,7 +114,7 @@ class Calendar extends React.Component {
                   selectedMonth == cell;
               }
               const bColor = isActive ? "#0081ED" : "white";
-              const fColor = isActive ? "white" : "black";
+              const fColor = isActive ? "white" : "gray";
 
               return (
                 <TouchableOpacity
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     borderWidth: 5
   },
   mainContainer: {
-    backgroundColor: "white",
+    backgroundColor: "#f5f5f5",
     width: "75%",
     height: "66%",
     marginTop: "30%",
@@ -348,40 +348,37 @@ const styles = StyleSheet.create({
   },
   cellContainer: {
     width: "90%",
-    height: "80%",
+    height: "65%",
     margin: "1%",
     flexDirection: "row",
     flexWrap: "wrap",
     marginLeft: "1%",
-    alignItems: "center"
+    alignItems: "center",
   },
   headerRow: {
     width: "90%",
     height: "15%",
     margin: "4%",
+    backgroundColor: "white",
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "stretch",
-    borderColor: "black",
     borderRadius: 5,
-    borderWidth: 1,
   },
   footerRow: {
     width: "100%",
     height: "15%",
-    margin: "1%",
+    marginTop: "4%",
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "stretch",
   },
   monthCells: {
-    width: "31%",
-    height: "22%",
-    margin: "1%",
+    width: "23%",
+    height: "30%",
+    margin: "0.7%",
     alignItems: "center",
     alignSelf: "stretch",
-    borderColor: "black",
-    borderWidth: 1,
     borderRadius: 2,
     shadowColor: "#bec0c4",
     shadowOpacity: 0.8,
@@ -399,28 +396,27 @@ const styles = StyleSheet.create({
     alignSelf: "stretch"
   },
   textCell: {
-    marginTop: "15%"
+    marginTop: "15%",
+    color: "gray"
   },
   cellText: {
-    marginTop: "12%",
+    marginTop: "22%",
     marginBottom: "12%",
     alignItems: "center",
   },
   closeButtonText: {
-    marginLeft: "15%",
-    marginBottom: "5%",
-    marginTop: "5%",
-    fontWeight: "bold"
+    marginTop: "10%",
+    fontWeight: "bold",
   },
   closeButton: {
     margin: "2%",
-    width: "35%",
+    backgroundColor: "white",
+    width: "30%",
     height: "85%",
+    marginLeft: "60%",
     borderRadius: 50,
-    borderColor: "black",
     alignItems: "center",
     alignSelf: "stretch",
-    borderWidth: 1
   },
   viewButton: {
     width: "33%",
