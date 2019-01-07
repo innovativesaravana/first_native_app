@@ -113,8 +113,8 @@ class Calendar extends React.Component {
                   selectedYear == this.state.currentYear &&
                   selectedMonth == cell;
               }
-              const bColor = isActive ? "#0081ED" : "white";
-              const fColor = isActive ? "white" : "gray";
+              const bColor = isActive ? "#686678" : "#dee3ea";
+              const fColor = isActive ? "white" : "#686678";
 
               return (
                 <TouchableOpacity
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
     borderWidth: 5
   },
   mainContainer: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#dee3ea",
     width: "75%",
     height: "66%",
     marginTop: "30%",
@@ -359,7 +359,6 @@ const styles = StyleSheet.create({
     width: "90%",
     height: "15%",
     margin: "4%",
-    backgroundColor: "white",
     alignItems: "center",
     flexDirection: "row",
     alignSelf: "stretch",
@@ -375,18 +374,11 @@ const styles = StyleSheet.create({
   },
   monthCells: {
     width: "23%",
-    height: "30%",
+    aspectRatio: 1,
     margin: "0.7%",
     alignItems: "center",
-    alignSelf: "stretch",
+    justifyContent: "center",
     borderRadius: 2,
-    shadowColor: "#bec0c4",
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
-    shadowOffset: {
-      height: 5,
-      width: 5
-    }
   },
   headerCells: {
     marginTop: "0%",
@@ -397,20 +389,23 @@ const styles = StyleSheet.create({
   },
   textCell: {
     marginTop: "15%",
-    color: "gray"
+    fontWeight: "bold",
+    color: "#686678"
   },
   cellText: {
     marginTop: "22%",
     marginBottom: "12%",
+    fontWeight: "bold",
     alignItems: "center",
   },
   closeButtonText: {
     marginTop: "10%",
+    color: "#f5f5f5",
     fontWeight: "bold",
   },
   closeButton: {
     margin: "2%",
-    backgroundColor: "white",
+    backgroundColor: "#686678",
     width: "30%",
     height: "85%",
     marginLeft: "60%",
