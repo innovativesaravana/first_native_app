@@ -34,7 +34,7 @@ export default class App extends React.Component {
           <Calendar
             date={this.state.date}
             yearOnly={false}
-            closeModel={this.closeModel}
+            onSelect={this.onSelect}
           />
         )}
         <TouchableOpacity
@@ -56,7 +56,7 @@ export default class App extends React.Component {
       isVisible: true
     });
   };
-  closeModel = date => {
+  onSelect = date => {
     this.setState({
       isVisible: false,
       date: date

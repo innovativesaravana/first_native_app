@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 export default class Calendar extends React.Component {
   constructor(props) {
     super(props);
-    const { yearOnly, closeModel, date } = props;
+    const { yearOnly, onSelect, date } = props;
     const months = [
       "JAN",
       "FEB",
@@ -126,7 +126,7 @@ export default class Calendar extends React.Component {
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() =>
-                this.props.closeModel(
+                this.props.onSelect(
                   this.getDate(
                     this.state.selectedYear,
                     this.state.selectedMonth
@@ -191,7 +191,7 @@ export default class Calendar extends React.Component {
             selectedYear: cellValue
           },
           () =>
-            this.props.closeModel(
+            this.props.onSelect(
               this.getDate(this.state.selectedYear, this.state.selectedMonth)
             )
         );
@@ -216,7 +216,7 @@ export default class Calendar extends React.Component {
           selectedYear: this.state.currentYear
         },
         () =>
-          this.props.closeModel(
+          this.props.onSelect(
             this.getDate(this.state.selectedYear, this.state.selectedMonth)
           )
       );
@@ -257,7 +257,7 @@ Calendar.defaultProps = {
 Calendar.propTypes = {
   date: PropTypes.instanceOf(Date),
   yearOnly: PropTypes.bool,
-  closeModel: PropTypes.func.isRequired
+  onSelect: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({
