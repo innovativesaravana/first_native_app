@@ -3,6 +3,11 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import EStyleSheet from 'react-native-extended-stylesheet';
+
+EStyleSheet.build({
+  $rem: 1.08270676692
+});
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -65,7 +70,6 @@ export default class Calendar extends React.Component {
   render() {
     return (
       <Modal
-        style={styles.modalContainer}
         transparent={true}
         visible={true}
         onRequestClose={() => null}
@@ -74,13 +78,13 @@ export default class Calendar extends React.Component {
           <View style={styles.headerRow}>
             <TouchableOpacity
               onPress={() => this.leftArrowClicked()}
-              style={styles.headerCells}
+              style={styles.headerArrowCells}
               key="left"
             >
               <Icon name='chevron-double-left' style={styles.arrowIcon}/>
             </TouchableOpacity>
             <TouchableOpacity
-              style={styles.headerCells}
+              style={styles.headerLabelCell}
               onPress={() => this.headerLabelClicked()}
               key="label"
             >
@@ -88,7 +92,7 @@ export default class Calendar extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => this.rightArrowClicked()}
-              style={styles.headerCells}
+              style={styles.headerArrowCells}
               key="right"
             >
               <Icon name='chevron-double-right' style={styles.arrowIcon}/>
@@ -260,95 +264,79 @@ Calendar.propTypes = {
   onSelect: PropTypes.func.isRequired
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-
-  modalContainer: {
-    borderWidth: 5
-  },
+const styles = EStyleSheet.create({
   mainContainer: {
     backgroundColor: "#dee3ea",
     width: "75%",
-    height: "66%",
+    aspectRatio: 0.9,
+    padding: "1%",
+    flexDirection: "column",
     marginTop: "30%",
     marginLeft: "12%",
-    alignItems: "center",
-    borderColor: "black",
     borderRadius: 8,
+    borderColor: "black",
     borderWidth: 1
   },
   cellContainer: {
-    width: "90%",
-    height: "65%",
-    margin: "1%",
+    aspectRatio: 1.3,
+    padding: "4%",
     flexDirection: "row",
     flexWrap: "wrap",
-    marginLeft: "1%",
-    alignItems: "center"
   },
   headerRow: {
-    width: "90%",
-    height: "15%",
-    margin: "4%",
+    aspectRatio: 6,
+    justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    alignSelf: "stretch",
-    borderRadius: 5
   },
   footerRow: {
     width: "100%",
-    height: "15%",
-    marginTop: "4%",
-    alignItems: "center",
+    aspectRatio: 6,
     flexDirection: "row",
-    alignSelf: "stretch"
   },
   monthCells: {
-    width: "23%",
+    width: "25%",
     aspectRatio: 1,
-    margin: "0.7%",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 2
   },
-  headerCells: {
-    marginTop: "0%",
-    width: "33%",
+  headerArrowCells: {
+    justifyContent: "center",
+    flex: 1,
     height: "100%",
     alignItems: "center",
-    alignSelf: "stretch"
+  },
+  headerLabelCell: {
+    justifyContent: "center",
+    flex: 3,
+    height: "100%",
+    alignItems: "center",
   },
   textCell: {
-    marginTop: "15%",
     fontWeight: "bold",
+    fontSize: '16rem',
     color: "#686678"
   },
   arrowIcon: {
-    marginTop: "15%",
-    fontSize: 25,
+    fontSize: '16rem',
     color: "#686678"
   },
   cellText: {
-    marginTop: "22%",
-    marginBottom: "12%",
+    fontSize: '16rem',
     fontWeight: "bold",
-    alignItems: "center"
   },
   closeButtonText: {
-    marginTop: "10%",
+    fontSize: '16rem',
     color: "#f5f5f5",
     fontWeight: "bold"
   },
   closeButton: {
-    margin: "2%",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#686678",
     width: "30%",
     height: "85%",
-    marginLeft: "60%",
+    marginLeft: "70%",
     borderRadius: 50,
-    alignItems: "center",
-    alignSelf: "stretch"
   }
 });
