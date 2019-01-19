@@ -72,7 +72,7 @@ export default class Calendar extends React.Component {
         <View style={styles.mainContainer}>
           <View style={styles.headerRow}>
             <TouchableOpacity
-              onPress={() => this.leftClicked()}
+              onPress={() => this.leftArrowClicked()}
               style={styles.headerCells}
               key="left"
             >
@@ -80,13 +80,13 @@ export default class Calendar extends React.Component {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerCells}
-              onPress={() => this.yearMode()}
+              onPress={() => this.headerLabelClicked()}
               key="label"
             >
               <Text style={styles.textCell}>{this.state.headerLabel}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this.rightClicked()}
+              onPress={() => this.rightArrowClicked()}
               style={styles.headerCells}
               key="right"
             >
@@ -142,7 +142,7 @@ export default class Calendar extends React.Component {
     );
   }
 
-  leftClicked = e => {
+  leftArrowClicked = e => {
     var currentYear = this.state.currentYear;
     if (this.state.mode === "months") {
       const { cells, headerLabel } = this.parseData(
@@ -168,7 +168,7 @@ export default class Calendar extends React.Component {
     }
   };
 
-  yearMode = e => {
+  headerLabelClicked = e => {
     const { cells, headerLabel } = this.parseData(
       "years",
       this.state.months,
@@ -222,7 +222,7 @@ export default class Calendar extends React.Component {
     }
   };
 
-  rightClicked = e => {
+  rightArrowClicked = e => {
     var currentYear = this.state.currentYear;
     if (this.state.mode === "months") {
       const { cells, headerLabel } = this.parseData(
