@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default class Calendar extends React.Component {
   constructor(props) {
@@ -76,7 +77,7 @@ export default class Calendar extends React.Component {
               style={styles.headerCells}
               key="left"
             >
-              <Text style={styles.textCell}>{"<<"}</Text>
+              <Icon name='chevron-double-left' style={styles.arrowIcon}/>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.headerCells}
@@ -90,7 +91,7 @@ export default class Calendar extends React.Component {
               style={styles.headerCells}
               key="right"
             >
-              <Text style={styles.textCell}>{">>"}</Text>
+              <Icon name='chevron-double-right' style={styles.arrowIcon}/>
             </TouchableOpacity>
           </View>
           <View style={styles.cellContainer}>
@@ -272,7 +273,7 @@ const styles = StyleSheet.create({
     width: "75%",
     height: "66%",
     marginTop: "30%",
-    marginLeft: "5%",
+    marginLeft: "12%",
     alignItems: "center",
     borderColor: "black",
     borderRadius: 8,
@@ -322,6 +323,11 @@ const styles = StyleSheet.create({
   textCell: {
     marginTop: "15%",
     fontWeight: "bold",
+    color: "#686678"
+  },
+  arrowIcon: {
+    marginTop: "15%",
+    fontSize: 25,
     color: "#686678"
   },
   cellText: {
