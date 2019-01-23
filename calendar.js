@@ -1,7 +1,13 @@
 import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import { StyleSheet, Text, View, TouchableOpacity, Modal } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Modal
+} from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import EStyleSheet from 'react-native-extended-stylesheet';
 
@@ -67,6 +73,12 @@ export default class Calendar extends React.Component {
     return { cells, headerLabel };
   };
 
+  closePicker = () => {
+    this.props.onSelect(
+      this.getDate(this.state.selectedYear, this.state.selectedMonth)
+    );
+  };
+
   render() {
     return (
       <Modal
@@ -74,75 +86,79 @@ export default class Calendar extends React.Component {
         visible={true}
         onRequestClose={() => null}
       >
-        <View style={styles.mainContainer}>
-          <View style={styles.headerRow}>
-            <TouchableOpacity
-              onPress={() => this.leftArrowClicked()}
-              style={styles.headerArrowCells}
-              key="left"
-            >
-              <Icon name='chevron-double-left' style={styles.arrowIcon}/>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.headerLabelCell}
-              onPress={() => this.headerLabelClicked()}
-              key="label"
-            >
-              <Text style={styles.textCell}>{this.state.headerLabel}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.rightArrowClicked()}
-              style={styles.headerArrowCells}
-              key="right"
-            >
-              <Icon name='chevron-double-right' style={styles.arrowIcon}/>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.cellContainer}>
-            {_.map(this.state.cells, cell => {
-              const selectedYear = this.state.selectedYear;
-              const selectedMonth = this.state.selectedMonth;
-              let isActive = false;
-              if (this.state.mode == "years") {
-                isActive = selectedYear == cell;
-              } else {
-                isActive =
-                  selectedYear == this.state.currentYear &&
-                  selectedMonth == cell;
-              }
-              const bColor = isActive ? "#686678" : "#dee3ea";
-              const fColor = isActive ? "white" : "#686678";
-
-              return (
+        <TouchableWithoutFeedback onPress={this.closePicker}>
+          <View style={{ flex: 1, width: "100%" }}>
+            <View style={styles.mainContainer}>
+              <View style={styles.headerRow}>
                 <TouchableOpacity
-                  style={[styles.monthCells, { backgroundColor: bColor }]}
-                  onPress={() => this.cellClicked(cell)}
-                  key={cell}
+                  onPress={() => this.leftArrowClicked()}
+                  style={styles.headerArrowCells}
+                  key="left"
                 >
-                  <Text style={[styles.cellText, { color: fColor }]}>
-                    {cell}
-                  </Text>
+                  <Icon name='chevron-double-left' style={styles.arrowIcon}/>
                 </TouchableOpacity>
-              );
-            })}
+                <TouchableOpacity
+                  style={styles.headerLabelCell}
+                  onPress={() => this.headerLabelClicked()}
+                  key="label"
+                >
+                  <Text style={styles.textCell}>{this.state.headerLabel}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => this.rightArrowClicked()}
+                  style={styles.headerArrowCells}
+                  key="right"
+                >
+                  <Icon name='chevron-double-right' style={styles.arrowIcon}/>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.cellContainer}>
+                {_.map(this.state.cells, cell => {
+                  const selectedYear = this.state.selectedYear;
+                  const selectedMonth = this.state.selectedMonth;
+                  let isActive = false;
+                  if (this.state.mode == "years") {
+                    isActive = selectedYear == cell;
+                  } else {
+                    isActive =
+                      selectedYear == this.state.currentYear &&
+                      selectedMonth == cell;
+                  }
+                  const bColor = isActive ? "#686678" : "#dee3ea";
+                  const fColor = isActive ? "white" : "#686678";
+
+                  return (
+                    <TouchableOpacity
+                      style={[styles.monthCells, { backgroundColor: bColor }]}
+                      onPress={() => this.cellClicked(cell)}
+                      key={cell}
+                    >
+                      <Text style={[styles.cellText, { color: fColor }]}>
+                        {cell}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+              <View style={styles.footerRow}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() =>
+                    this.props.onSelect(
+                      this.getDate(
+                        this.state.selectedYear,
+                        this.state.selectedMonth
+                      )
+                    )
+                  }
+                  key="label"
+                >
+                  <Text style={styles.closeButtonText}>Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-          <View style={styles.footerRow}>
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() =>
-                this.props.onSelect(
-                  this.getDate(
-                    this.state.selectedYear,
-                    this.state.selectedMonth
-                  )
-                )
-              }
-              key="label"
-            >
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     );
   }
